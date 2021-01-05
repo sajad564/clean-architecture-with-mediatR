@@ -1,0 +1,36 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/.idea.bookSolutation.iml
+/contentModel.xml
+/modules.xml
+/projectSettingsUpdater.xml
+# Datasource local storage ignored files
+/../../../../../:\clean architecture with mediatR\.idea\.idea.bookSolutation\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+/.idea
+/.vscode
+/book.Api/wwwroot/book
+/book.Api/wwwroot/user
+/obj
+
+/book.Test/.vscode
+/book.Test/files/books
+/book.Test/files/pics
+/book.Test/bin
+/book.Test/obj
+/book.Api/.vscode
+/book.Api/obj
+/book.Api/bin
+/book.Domain/bin
+/book.Domain/obj
+/book.Application/.vscode
+/book.Application/bin
+/book.Application/obj
+/book.Infrastructure/book.Infrastructure.Data/bin
+/book.Infrastructure/book.Infrastructure.Data/obj
+/book.Infrastructure/book.Infrastructure.Common/obj
+/book.Infrastructure/book.Infrastructure.Common/bin
