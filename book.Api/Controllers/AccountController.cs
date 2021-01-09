@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using book.Application.common;
+using book.Application.common.Resources;
 using book.Application.CQRS.Command;
 using book.Application.CQRS.Queries;
 using book.Domain.Entities;
@@ -28,6 +29,11 @@ namespace book.Api.Controllers
         public  async Task<Response<bool>> Register( [FromForm] RegisterUserCommand addUserCommand)
         {
             return await mediator.Send(addUserCommand) ;  
+        }
+        [Authorize]
+        [HttpGet("[Action]")]
+        public async Task<Response<UserResource>> CurrentUser() {
+            return await mediator.Send(new GetCurrentUserQuery()) ; 
         }
         [HttpPost("[Action]")]
         public async Task<Response<Token>> Login([FromBody] LoginUserCommand loginInfo) {
@@ -60,6 +66,11 @@ namespace book.Api.Controllers
         {
             return await mediator.Send(command) ; 
         }
+        [HttpPost("[Action]")]
+        public async Task<Response<Token>> RefreshToken([FromBody] RefreshCommand command)
+        {
+            return await mediator.Send(command) ; 
+        } 
         
     }
 }

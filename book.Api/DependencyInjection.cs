@@ -16,7 +16,8 @@ namespace book.Api
             services.AddCors(options => {
                 options.AddPolicy(name : "mycorsPolicy" , builder => {
                     builder.WithOrigins("http://localhost:8080")
-                    .AllowAnyMethod() ; 
+                    .AllowAnyMethod()
+                    .AllowAnyHeader() ;  
                 });
             });
             services.ConfigureApplicationCookie(options => {
@@ -32,8 +33,10 @@ namespace book.Api
                     options.RequireHttpsMetadata = false ;
                     options.TokenValidationParameters = new TokenValidationParameters
                             {
+                                RequireExpirationTime = true ,
                                 ValidateIssuer = true  ,
                                 ValidateAudience = false  , 
+                                ValidateIssuerSigningKey = true , 
                                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(config.GetSection("AuthenticationConf:Key").Value)) ,
                                 ValidIssuer = config.GetSection("AuthenticationConf:Issuer").Value , 
                             } ; 

@@ -41,7 +41,7 @@ namespace book.Test.Common
         {
             var response = await Client.PostAsJsonAsync("/api/account/login" ,SelectRandomUserForLogin() ) ; 
             var result = await response.Content.ReadAsAsync<Response<Token>>() ;
-            return result.Item.Accesstoken; 
+            return result.Item.AccessToken; 
         }
         private LoginUserCommand SelectRandomUserForLogin()
         {

@@ -56,7 +56,7 @@ namespace book.Infrastructure.Common.services
             {
                 throw new SecurityTokenException("توکن معتبر نمیباشد") ; 
             }
-            return princ.Identity.Name ;
+            return princ.FindFirst(ClaimTypes.NameIdentifier).Value ;
         }
 
 
@@ -78,7 +78,7 @@ namespace book.Infrastructure.Common.services
                 Issuer = config.Issuer , 
                 
                 Subject = new ClaimsIdentity(claims) , 
-                Expires = DateTime.UtcNow.AddDays(config.ExpirationTime) ,
+                Expires = DateTime.UtcNow.AddMinutes(config.ExpirationTime) ,
                  SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
             } ; 
             var token = tokenHandler.CreateToken(tokenDescription) ;

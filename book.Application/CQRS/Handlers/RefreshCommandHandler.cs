@@ -38,13 +38,13 @@ namespace book.Application.CQRS.Handlers
             //update user
             user.RefreshToken= newRefreshToken ; 
             await userRepo.UpdateAsync(user) ;
-            return new Token {RefreshToken = newRefreshToken , Accesstoken = newAccessToken} ;  
+            return new Token {RefreshToken = newRefreshToken , AccessToken = newAccessToken} ;  
 
         }
         private async Task<User> GetUserFromExpiredTokenAsync(string expiredToken)
         {
-            var username = tokenGenerator.GetUsernameFromExpiredToken(expiredToken) ; 
-            return  await userRepo.FindByExpression(u => u.UserName==username).FirstOrDefaultAsync() ;
+            var userId = tokenGenerator.GetUsernameFromExpiredToken(expiredToken) ; 
+            return  await userRepo.GetUserByIdAsync(userId) ;
 
         }
     }

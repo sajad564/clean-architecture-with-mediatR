@@ -26,10 +26,10 @@ namespace book.Application.CQRS.Handlers
             var userExist = await userRepo.GetUserByUsernameAsync(request.Username);
             var isPasswordCorrect = await userRepo.CheckUserPassword(userExist, request.password);
             if(userExist!=null && isPasswordCorrect) {
-                if(!userExist.EmailConfirmed)
-                {
-                    return Response.Fail<Token>("شما هنوز حساب خود را فعال نکرده اید" , StatusCodeEnum.NOTAUTHORIZE) ; 
-                }
+                // if(!userExist.EmailConfirmed)
+                // {
+                //     return Response.Fail<Token>("شما هنوز حساب خود را فعال نکرده اید" , StatusCodeEnum.NOTAUTHORIZE) ; 
+                // }
                 Token token = await GenerateTokenAndUpdateUserAsync(userExist) ; 
                   
                 return Response.Ok<Token>(token) ;  
@@ -40,10 +40,10 @@ namespace book.Application.CQRS.Handlers
         }
         private async Task<Token> GenerateTokenAndUpdateUserAsync(User user)
         {
-                Token token = new Token { Accesstoken = await tokenGenerator.GenerateTokenAsync(user)} ;
+                Token token = new Token { AccessToken = await tokenGenerator.GenerateTokenAsync(user)} ;
                 token.RefreshToken = tokenGenerator.RefreshTokenGeneretor() ;
                 user.RefreshToken = token.RefreshToken ; 
-                user.ExpiredRefreshTokenDate = DateTime.UtcNow ; 
+                user.ExpiredRefreshTokenDate = DateTime.UtcNow.AddDays(7) ; 
                 await userRepo.UpdateAsync(user) ;
                 return token ; 
         }
