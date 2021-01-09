@@ -8,7 +8,7 @@ using book.Domain.Entities;
 using book.Domain.Interfaces.services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-
+using System.Security.Cryptography ; 
 namespace book.Infrastructure.Common.services
 {
     public class TokenGenerator : ITokenGenerator
@@ -27,6 +27,36 @@ namespace book.Infrastructure.Common.services
             ;
             List<Claim> claims = await GetClaims(user) ; 
             return GenerateTokenByClaims(claims) ; 
+        }
+        public string RefreshTokenGeneretor()
+        {
+            var randNumber = new byte[32] ; 
+            using(var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randNumber) ; 
+                return Convert.ToBase64String(randNumber) ; 
+            }
+        }
+        public ClaimsPrincipal GetPrincipalForExpiredToken(string token)
+        {
+            var tokenHnadler = new JwtSecurityTokenHandler() ;
+            var tokenValidatorParams = new TokenValidationParameters
+            {
+                ValidateIssuer = true  , 
+                ValidIssuer= config.Issuer , 
+                ValidateAudience = false ,
+                ValidateIssuerSigningKey = true ,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Key)) , 
+                RequireExpirationTime = false 
+            } ; 
+            SecurityToken securityToken ; 
+            var princ = tokenHnadler.ValidateToken(token , tokenValidatorParams ,out securityToken) ;  
+            var jwtSecurityToken = securityToken as JwtSecurityToken ;
+            if(jwtSecurityToken==null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256 , StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("توکن معتبر نمیباشد") ; 
+            }
+            return princ ;
         }
 
 
