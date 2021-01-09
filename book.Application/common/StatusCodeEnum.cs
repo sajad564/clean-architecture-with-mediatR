@@ -5,6 +5,7 @@ namespace book.Application.common
         OK  , 
         BADREQUEST ,
         NOTAUTHORIZE , 
-        NOTFUOUND ,  
+        NOTFUOUND ,
+        INTERNALSERVEL  
     }
 }

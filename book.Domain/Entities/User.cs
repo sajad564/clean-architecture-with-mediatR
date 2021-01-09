@@ -15,6 +15,8 @@ namespace book.Domain.Entities
         public string ImgId {get;set;}
         public DateTime LastTimeSendConfirmLink {get;set;}
         public bool IsAlive {get;set;}
+        public string RefreshToken {get;set;}
+        public DateTime ExpiredRefreshTokenDate {get;set;}
         public List<Book> Books {get;set;}
         public List<Order> Orders {get;set;}
         public List<Comment> Comments {get;set;}

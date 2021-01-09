@@ -1,4 +1,5 @@
 using System;
+using System.Security;
 using book.Application.common;
 using book.Application.common.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
@@ -24,10 +25,14 @@ namespace book.Api.Controllers
                 
              
             }
+            if(excetionDetail.Error is SecurityException secExp)
+            {
+                return book.Application.common.Response.Fail<bool>("درخواست نامعتبر",  StatusCodeEnum.NOTAUTHORIZE) ; 
+            }
             else
             {
                  
-                return book.Application.common.Response.Fail<bool>("مشکلی در سرور پیش آمده است", StatusCodeEnum.BADREQUEST, false);
+                return book.Application.common.Response.Fail<bool>("مشکلی در سرور پیش آمده است", StatusCodeEnum.INTERNALSERVEL, false);
             }
 
         }

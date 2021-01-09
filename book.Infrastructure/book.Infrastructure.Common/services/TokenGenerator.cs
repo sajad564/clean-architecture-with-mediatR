@@ -21,7 +21,7 @@ namespace book.Infrastructure.Common.services
             this.userManager = userManager;
 
         }
-        public async Task<Token> GenerateTokenAsync(User user)
+        public async Task<string> GenerateTokenAsync(User user)
         {
             
             ;
@@ -37,7 +37,7 @@ namespace book.Infrastructure.Common.services
                 return Convert.ToBase64String(randNumber) ; 
             }
         }
-        public ClaimsPrincipal GetPrincipalForExpiredToken(string token)
+        public string GetUsernameFromExpiredToken(string token)
         {
             var tokenHnadler = new JwtSecurityTokenHandler() ;
             var tokenValidatorParams = new TokenValidationParameters
@@ -56,7 +56,7 @@ namespace book.Infrastructure.Common.services
             {
                 throw new SecurityTokenException("توکن معتبر نمیباشد") ; 
             }
-            return princ ;
+            return princ.Identity.Name ;
         }
 
 
@@ -71,7 +71,7 @@ namespace book.Infrastructure.Common.services
             claims.Add(idClaim) ;
             return claims ;  
         }
-        private Token GenerateTokenByClaims(List<Claim> claims) {
+        private string GenerateTokenByClaims(List<Claim> claims) {
             var tokenHandler = new JwtSecurityTokenHandler() ;
             var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(config.Key))  ;  
             var tokenDescription = new SecurityTokenDescriptor {
@@ -82,13 +82,14 @@ namespace book.Infrastructure.Common.services
                  SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
             } ; 
             var token = tokenHandler.CreateToken(tokenDescription) ;
-            return convertStringToToken(tokenHandler.WriteToken(token)) ; 
+           return tokenHandler.WriteToken(token) ; 
+            // return convertStringToToken(tokenHandler.WriteToken(token)) ; 
         } 
-        private Token convertStringToToken(string token) {
-            var tokenModel = new Token {
-                Accesstoken = token
-            } ;
-            return tokenModel ; 
-        } 
+        // private Token convertStringToToken(string token) {
+        //     var tokenModel = new Token {
+        //         Accesstoken = token
+        //     } ;
+        //     return tokenModel ; 
+        // } 
     }
 }

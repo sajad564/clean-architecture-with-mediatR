@@ -5,6 +5,8 @@ namespace book.Domain.Interfaces.services
 {
     public interface ITokenGenerator
     {
-         Task<Token> GenerateTokenAsync(User user) ; 
+         Task<string> GenerateTokenAsync(User user) ;
+          string GetUsernameFromExpiredToken(string token) ;
+          string RefreshTokenGeneretor() ;  
     }
 }

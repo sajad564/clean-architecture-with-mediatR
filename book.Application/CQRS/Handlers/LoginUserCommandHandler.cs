@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using book.Application.common;
@@ -24,17 +25,27 @@ namespace book.Application.CQRS.Handlers
         {
             var userExist = await userRepo.GetUserByUsernameAsync(request.Username);
             var isPasswordCorrect = await userRepo.CheckUserPassword(userExist, request.password);
-            if(isPasswordCorrect) {
+            if(userExist!=null && isPasswordCorrect) {
                 if(!userExist.EmailConfirmed)
                 {
                     return Response.Fail<Token>("شما هنوز حساب خود را فعال نکرده اید" , StatusCodeEnum.NOTAUTHORIZE) ; 
                 }
-                Token token = await tokenGenerator.GenerateTokenAsync(userExist) ;
+                Token token = await GenerateTokenAndUpdateUserAsync(userExist) ; 
+                  
                 return Response.Ok<Token>(token) ;  
             }
             else {
                 return Response.Fail<Token>("لطفا اطلاعات حساب خود را بررسی کنید " , StatusCodeEnum.BADREQUEST) ; 
             }
+        }
+        private async Task<Token> GenerateTokenAndUpdateUserAsync(User user)
+        {
+                Token token = new Token { Accesstoken = await tokenGenerator.GenerateTokenAsync(user)} ;
+                token.RefreshToken = tokenGenerator.RefreshTokenGeneretor() ;
+                user.RefreshToken = token.RefreshToken ; 
+                user.ExpiredRefreshTokenDate = DateTime.UtcNow ; 
+                await userRepo.UpdateAsync(user) ;
+                return token ; 
         }
         
     }
